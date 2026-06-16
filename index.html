@@ -3,125 +3,520 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DELF B1 프랑스어 학습 대시보드</title>
+<title>DELF B1 — 한다운의 프랑스어 학습</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
+:root {
+  --bg: #F6F5F2;
+  --card: #FFFFFF;
+  --navy: #0D1B4B;
+  --navy2: #1A2E6F;
+  --blue: #3B5BDB;
+  --gold: #C9930A;
+  --gold-bg: #FFF8E1;
+  --green: #0F9B5E;
+  --green-bg: #E6F7F0;
+  --text: #1A1A2E;
+  --sub: #6B7280;
+  --border: #E8E6E0;
+  --hover: #F0EFEC;
+  --shadow: 0 2px 12px rgba(13,27,75,0.08);
+  --shadow-lg: 0 8px 32px rgba(13,27,75,0.14);
+}
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f4f4f6; color: #1a1a1a; padding: 24px; max-width: 760px; margin: 0 auto; }
-h1 { font-size: 18px; font-weight: 600; }
-.sub { font-size: 13px; color: #888; margin-top: 3px; }
-.top-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
-.stats { display: flex; gap: 10px; }
-.stat { background: white; border: 1px solid #e8e8e8; border-radius: 10px; padding: 10px 14px; text-align: center; min-width: 72px; }
-.stat-n { font-size: 20px; font-weight: 600; color: #1a1a1a; }
-.stat-l { font-size: 11px; color: #999; margin-top: 2px; }
-.card { background: white; border: 1px solid #e8e8e8; border-radius: 14px; padding: 20px 22px; margin-bottom: 14px; }
-.card-title { font-size: 11px; font-weight: 600; color: #aaa; letter-spacing: 0.6px; text-transform: uppercase; margin-bottom: 14px; }
-.countdown-bar { background: #002395; border-radius: 14px; padding: 18px 22px; margin-bottom: 14px; color: white; display: flex; justify-content: space-between; align-items: center; }
-.cd-num { font-size: 36px; font-weight: 600; line-height: 1; }
-.cd-unit { font-size: 13px; opacity: 0.7; margin-top: 3px; }
-.cd-right { text-align: right; }
-.cd-pct { font-size: 13px; opacity: 0.8; margin-bottom: 6px; }
-.prog-track { height: 5px; background: rgba(255,255,255,0.25); border-radius: 3px; width: 130px; }
-.prog-fill { height: 5px; background: white; border-radius: 3px; transition: width 0.4s; }
-.cd-sub { font-size: 11px; opacity: 0.55; margin-top: 5px; }
-.expr-big { font-size: 26px; font-weight: 600; color: #002395; font-style: italic; margin-bottom: 6px; }
-.badge { display: inline-block; font-size: 11px; padding: 2px 8px; background: #eef0ff; color: #3730a3; border-radius: 5px; margin-bottom: 12px; }
-.meaning-big { font-size: 16px; color: #333; margin-bottom: 14px; }
-.ex-block { background: #f7f8ff; border-left: 3px solid #002395; padding: 10px 14px; border-radius: 0 8px 8px 0; margin-bottom: 8px; }
-.ex-fr { font-size: 14px; color: #002395; margin-bottom: 3px; }
-.ex-ko { font-size: 13px; color: #666; }
-.tip-block { background: #fffbeb; border-left: 3px solid #d97706; padding: 10px 14px; border-radius: 0 8px 8px 0; font-size: 13px; color: #92400e; margin-top: 12px; }
-.tip-label { font-size: 11px; font-weight: 600; color: #b45309; margin-bottom: 3px; }
-.b1-block { background: #f0fdf4; border-left: 3px solid #16a34a; padding: 10px 14px; border-radius: 0 8px 8px 0; font-size: 13px; color: #166534; margin-top: 8px; }
-.b1-label { font-size: 11px; font-weight: 600; color: #15803d; margin-bottom: 3px; }
-.quiz-q { font-size: 14px; color: #555; margin-bottom: 8px; }
-.quiz-meaning { font-size: 18px; font-weight: 600; color: #1a1a1a; margin-bottom: 16px; padding: 12px 16px; background: #f7f8ff; border-radius: 8px; }
-.quiz-input { width: 100%; font-size: 15px; padding: 10px 14px; border: 1.5px solid #ddd; border-radius: 8px; outline: none; color: #1a1a1a; background: white; font-family: inherit; }
-.quiz-input:focus { border-color: #002395; }
-.quiz-btn { margin-top: 10px; padding: 9px 22px; background: #002395; color: white; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; font-family: inherit; }
-.quiz-btn:hover { background: #001a70; }
-.quiz-btn.next { background: #555; margin-left: 8px; }
-.quiz-btn.next:hover { background: #333; }
-.result-box { margin-top: 12px; font-size: 14px; padding: 10px 14px; border-radius: 8px; }
-.correct { background: #ecfdf5; color: #065f46; border: 1px solid #bbf7d0; }
-.wrong { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
-.score-row { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; }
-.score-txt { font-size: 12px; color: #aaa; }
-.hist-item { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid #f0f0f0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ── GNB ── */
+.gnb {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(246,245,242,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+}
+.gnb-inner {
+  max-width: 780px; margin: 0 auto;
+  display: flex; align-items: center; gap: 4px;
+  height: 52px;
+}
+.gnb-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px; font-weight: 700;
+  color: var(--navy); letter-spacing: -0.3px;
+  flex-shrink: 0; margin-right: 12px;
+}
+.gnb-logo span { color: var(--blue); }
+.nav-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 6px 12px; border-radius: 8px;
+  border: none; background: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px; font-weight: 500;
+  color: var(--sub); cursor: pointer;
+  transition: all 0.15s; white-space: nowrap;
+}
+.nav-btn:hover { background: var(--hover); color: var(--text); }
+.nav-btn.active { background: var(--navy); color: white; }
+.nav-btn .icon { font-size: 14px; }
+
+/* ── Layout ── */
+.page { display: none; max-width: 780px; margin: 0 auto; padding: 28px 20px 60px; }
+.page.active { display: block; }
+
+/* ── Cards ── */
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 22px 24px;
+  margin-bottom: 16px; box-shadow: var(--shadow);
+}
+.card-label {
+  font-size: 10px; font-weight: 600; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--sub);
+  margin-bottom: 14px;
+}
+
+/* ── Hero countdown ── */
+.hero {
+  background: linear-gradient(135deg, var(--navy) 0%, #1A3D8F 100%);
+  border-radius: 20px; padding: 28px 28px;
+  margin-bottom: 16px; color: white;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: 'DELF';
+  position: absolute; right: -12px; top: -20px;
+  font-family: 'Playfair Display', serif;
+  font-size: 100px; font-weight: 700;
+  color: rgba(255,255,255,0.04); letter-spacing: -4px;
+  pointer-events: none;
+}
+.hero-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+.hero-subtitle { font-size: 11px; opacity: 0.55; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+.hero-days { font-family: 'Playfair Display', serif; font-size: 52px; font-weight: 700; line-height: 1; }
+.hero-days-label { font-size: 14px; opacity: 0.65; margin-top: 4px; }
+.hero-right { text-align: right; }
+.hero-exam { font-size: 13px; opacity: 0.7; margin-bottom: 4px; }
+.hero-exam strong { opacity: 1; font-size: 15px; }
+.milestone-tag {
+  display: inline-block;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 20px; padding: 4px 12px;
+  font-size: 11px; margin-top: 8px;
+}
+.hero-bar { background: rgba(255,255,255,0.15); border-radius: 4px; height: 4px; margin-top: 16px; }
+.hero-bar-fill { height: 4px; background: #C9A432; border-radius: 4px; transition: width 0.8s cubic-bezier(0.16,1,0.3,1); }
+.hero-bar-info { display: flex; justify-content: space-between; margin-top: 8px; font-size: 11px; opacity: 0.55; }
+
+/* ── Stats row ── */
+.stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+.stat-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 16px;
+  text-align: center; box-shadow: var(--shadow);
+}
+.stat-n { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: var(--navy); line-height: 1; }
+.stat-l { font-size: 11px; color: var(--sub); margin-top: 5px; }
+
+/* ── Today expression ── */
+.expr-fr {
+  font-family: 'Playfair Display', serif;
+  font-size: 30px; font-style: italic; font-weight: 500;
+  color: var(--navy); margin-bottom: 8px; line-height: 1.2;
+}
+.type-badge {
+  display: inline-block; font-size: 11px; font-weight: 500;
+  padding: 3px 10px; border-radius: 20px;
+  background: #EEF2FF; color: var(--blue);
+  margin-bottom: 12px; letter-spacing: 0.2px;
+}
+.meaning-ko { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 18px; }
+.ex-block {
+  background: #F0F4FF; border-left: 3px solid var(--blue);
+  border-radius: 0 10px 10px 0; padding: 12px 16px;
+  margin-bottom: 10px;
+}
+.ex-fr-text { font-size: 14px; color: var(--navy2); font-style: italic; margin-bottom: 4px; }
+.ex-ko-text { font-size: 13px; color: var(--sub); }
+.tip-block {
+  background: var(--gold-bg); border-left: 3px solid var(--gold);
+  border-radius: 0 10px 10px 0; padding: 12px 16px;
+  margin-top: 12px;
+}
+.tip-label { font-size: 10px; font-weight: 700; color: var(--gold); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 4px; }
+.tip-text { font-size: 13px; color: #7B5E00; }
+.b1-block {
+  background: var(--green-bg); border-left: 3px solid var(--green);
+  border-radius: 0 10px 10px 0; padding: 12px 16px;
+  margin-top: 10px;
+}
+.b1-label { font-size: 10px; font-weight: 700; color: var(--green); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 4px; }
+.b1-text { font-size: 13px; color: #0A5F3A; }
+
+/* ── Quiz ── */
+.quiz-prompt { font-size: 13px; color: var(--sub); margin-bottom: 10px; }
+.quiz-meaning-box {
+  background: linear-gradient(135deg, #F0F4FF, #E8EEFF);
+  border-radius: 12px; padding: 18px 20px;
+  font-size: 22px; font-weight: 700; color: var(--navy);
+  margin-bottom: 16px; text-align: center;
+}
+.quiz-input {
+  width: 100%; font-size: 16px; padding: 13px 16px;
+  border: 1.5px solid var(--border); border-radius: 10px;
+  font-family: 'Playfair Display', serif; font-style: italic;
+  background: white; color: var(--text); outline: none;
+  transition: border-color 0.15s;
+}
+.quiz-input:focus { border-color: var(--blue); }
+.quiz-actions { display: flex; gap: 8px; margin-top: 10px; }
+.btn {
+  padding: 10px 22px; border-radius: 10px; border: none;
+  font-family: 'Inter', sans-serif; font-size: 14px;
+  font-weight: 500; cursor: pointer; transition: all 0.15s;
+}
+.btn-primary { background: var(--navy); color: white; }
+.btn-primary:hover { background: var(--navy2); }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-secondary { background: var(--hover); color: var(--text); }
+.btn-secondary:hover { background: var(--border); }
+.quiz-result {
+  margin-top: 12px; padding: 12px 16px;
+  border-radius: 10px; font-size: 14px;
+}
+.quiz-correct { background: #E6F7F0; color: #0A5F3A; border: 1px solid #A8E6CF; }
+.quiz-wrong { background: #FFF0F2; color: #8B1A2A; border: 1px solid #FACDD3; }
+.score-info { font-size: 12px; color: var(--sub); margin-top: 12px; }
+
+/* ── History ── */
+.hist-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 10px 0; border-bottom: 1px solid #F0EDE8;
+}
 .hist-item:last-child { border-bottom: none; }
-.hist-date { font-size: 12px; color: #bbb; min-width: 44px; }
-.hist-expr { font-size: 14px; font-style: italic; color: #002395; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.hist-meaning { font-size: 13px; color: #777; white-space: nowrap; }
-.empty { font-size: 13px; color: #bbb; padding: 16px 0; text-align: center; }
-.weekly-item { padding: 10px 14px; background: #f7f8ff; border-radius: 8px; margin-bottom: 8px; }
-.weekly-title { font-size: 13px; font-weight: 600; color: #002395; margin-bottom: 4px; }
-.weekly-content { font-size: 13px; color: #555; line-height: 1.6; }
+.hist-date { font-size: 12px; color: var(--sub); min-width: 36px; flex-shrink: 0; }
+.hist-expr { font-family: 'Playfair Display', serif; font-style: italic; font-size: 15px; color: var(--navy); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hist-meaning { font-size: 13px; color: var(--sub); white-space: nowrap; }
+
+/* ── Roadmap ── */
+.roadmap-header { text-align: center; margin-bottom: 28px; }
+.roadmap-title { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--navy); margin-bottom: 6px; }
+.roadmap-sub { font-size: 13px; color: var(--sub); }
+.phase-timeline { position: relative; padding-left: 32px; }
+.phase-timeline::before {
+  content: ''; position: absolute; left: 11px; top: 8px;
+  width: 2px; height: calc(100% - 16px);
+  background: linear-gradient(to bottom, var(--blue), #C9A432, var(--blue));
+}
+.phase-item { position: relative; margin-bottom: 24px; }
+.phase-dot {
+  position: absolute; left: -24px; top: 6px;
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid white; box-shadow: var(--shadow);
+}
+.phase-dot.done { background: var(--green); }
+.phase-dot.current { background: var(--blue); box-shadow: 0 0 0 4px rgba(59,91,219,0.2); }
+.phase-dot.upcoming { background: var(--border); }
+.phase-dot.exam-dot { background: var(--gold); width: 18px; height: 18px; left: -26px; top: 4px; }
+.phase-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 16px 18px;
+  box-shadow: var(--shadow);
+}
+.phase-card.current-phase { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(59,91,219,0.1), var(--shadow); }
+.phase-card.exam-phase { border-color: var(--gold); background: var(--gold-bg); }
+.phase-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+.phase-name { font-weight: 600; font-size: 15px; color: var(--text); }
+.phase-dates { font-size: 11px; color: var(--sub); text-align: right; }
+.phase-desc { font-size: 13px; color: var(--sub); margin-bottom: 10px; }
+.phase-goals { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+.phase-goal {
+  font-size: 11px; padding: 3px 10px;
+  border-radius: 20px; border: 1px solid var(--border);
+  color: var(--sub); background: var(--bg);
+}
+.phase-goal.done-tag { background: var(--green-bg); color: var(--green); border-color: #A8E6CF; }
+.phase-goal.current-tag { background: #EEF2FF; color: var(--blue); border-color: #C5CFF8; }
+.phase-goal.warn-tag { background: var(--gold-bg); color: var(--gold); border-color: #F5D98A; }
+.phase-progress-bar { background: var(--border); border-radius: 3px; height: 5px; margin-top: 12px; }
+.phase-progress-fill { height: 5px; border-radius: 3px; transition: width 0.6s ease; }
+.phase-progress-label { font-size: 11px; color: var(--sub); margin-top: 5px; }
+
+/* ── Guide ── */
+.guide-section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; font-weight: 700; color: var(--navy);
+  margin-bottom: 14px; padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+}
+.skill-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.skill-card {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px 16px;
+}
+.skill-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.skill-score { font-size: 11px; color: var(--blue); font-weight: 600; margin-bottom: 8px; }
+.skill-desc { font-size: 12px; color: var(--sub); line-height: 1.6; }
+.tip-list { list-style: none; }
+.tip-list li {
+  display: flex; gap: 10px; padding: 10px 0;
+  border-bottom: 1px solid var(--border); font-size: 13px; line-height: 1.6;
+}
+.tip-list li:last-child { border-bottom: none; }
+.tip-list li::before { content: '→'; color: var(--blue); font-weight: 700; flex-shrink: 0; padding-top: 1px; }
+.study-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.study-table th {
+  background: var(--navy); color: white;
+  padding: 10px 14px; text-align: left;
+  font-size: 11px; letter-spacing: 0.5px; font-weight: 500;
+}
+.study-table th:first-child { border-radius: 10px 0 0 0; }
+.study-table th:last-child { border-radius: 0 10px 0 0; }
+.study-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.study-table tr:last-child td { border-bottom: none; }
+.study-table tr:nth-child(even) td { background: var(--bg); }
+
+/* ── Review ── */
+.review-section-title { font-weight: 600; font-size: 15px; color: var(--text); margin-bottom: 12px; }
+.review-item { background: var(--bg); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+.review-item-title { font-weight: 600; font-size: 14px; color: var(--navy); margin-bottom: 4px; }
+.review-item-sub { font-size: 12px; color: var(--sub); }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.tag { font-size: 11px; padding: 2px 8px; border-radius: 20px; background: #EEF2FF; color: var(--blue); }
+
+/* ── Empty state ── */
+.empty-state { text-align: center; padding: 32px 20px; color: var(--sub); }
+.empty-icon { font-size: 32px; margin-bottom: 10px; }
+.empty-text { font-size: 14px; line-height: 1.6; }
+
+/* ── Notification banner ── */
+.notif-banner {
+  background: linear-gradient(135deg, #0D1B4B, #1A3D8F);
+  color: white; border-radius: 14px; padding: 16px 20px;
+  margin-bottom: 16px; display: flex; align-items: center; gap: 16px;
+  box-shadow: var(--shadow-lg); cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.notif-banner:hover { transform: translateY(-1px); box-shadow: 0 10px 36px rgba(13,27,75,0.2); }
+.notif-text { flex: 1; }
+.notif-headline { font-size: 11px; opacity: 0.6; margin-bottom: 4px; letter-spacing: 0.5px; text-transform: uppercase; }
+.notif-expr { font-family: 'Playfair Display', serif; font-style: italic; font-size: 22px; }
+.notif-meaning { font-size: 12px; opacity: 0.65; margin-top: 3px; }
+.notif-arrow { font-size: 18px; opacity: 0.5; }
+
+/* ── Utils ── */
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px; font-weight: 700; color: var(--navy);
+  margin-bottom: 16px;
+}
+.badge-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.badge-fr { font-size: 11px; padding: 3px 10px; border-radius: 20px; background: var(--bg); border: 1px solid var(--border); color: var(--sub); }
+
+@media (max-width: 540px) {
+  .gnb-logo { display: none; }
+  .nav-btn { padding: 6px 8px; }
+  .nav-btn .label { display: none; }
+  .hero-days { font-size: 42px; }
+  .expr-fr { font-size: 24px; }
+  .skill-grid { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
 
-<div class="top-row">
-  <div>
-    <h1>DELF B1 학습 대시보드</h1>
-    <p class="sub" id="today-label"></p>
+<!-- GNB -->
+<nav class="gnb">
+  <div class="gnb-inner">
+    <div class="gnb-logo">B1 <span>Français</span></div>
+    <button class="nav-btn active" onclick="showTab('home')" id="nav-home"><span class="icon">🏠</span><span class="label">홈</span></button>
+    <button class="nav-btn" onclick="showTab('today')" id="nav-today"><span class="icon">📖</span><span class="label">오늘</span></button>
+    <button class="nav-btn" onclick="showTab('roadmap')" id="nav-roadmap"><span class="icon">🗺️</span><span class="label">로드맵</span></button>
+    <button class="nav-btn" onclick="showTab('review')" id="nav-review"><span class="icon">🔄</span><span class="label">복습</span></button>
+    <button class="nav-btn" onclick="showTab('guide')" id="nav-guide"><span class="icon">💡</span><span class="label">가이드</span></button>
   </div>
-  <div class="stats">
-    <div class="stat">
+</nav>
+
+<!-- ═══ HOME ═══ -->
+<div class="page active" id="tab-home">
+  <div class="hero">
+    <div class="hero-top">
+      <div>
+        <div class="hero-subtitle">DELF B1 시험까지</div>
+        <div class="hero-days" id="days-left">—</div>
+        <div class="hero-days-label">일 남았어요</div>
+      </div>
+      <div class="hero-right">
+        <div class="hero-exam">시험일</div>
+        <div class="hero-exam"><strong>2026.11.14</strong></div>
+        <div class="milestone-tag" id="next-milestone">—</div>
+      </div>
+    </div>
+    <div class="hero-bar"><div class="hero-bar-fill" id="hero-fill" style="width:0%"></div></div>
+    <div class="hero-bar-info">
+      <span>6/16 시작</span>
+      <span id="pct-label">0% 완료</span>
+      <span>11/14 시험</span>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
       <div class="stat-n" id="stat-total">0</div>
-      <div class="stat-l">학습일</div>
+      <div class="stat-l">학습한 표현</div>
     </div>
-    <div class="stat">
+    <div class="stat-card">
       <div class="stat-n" id="stat-streak">0</div>
-      <div class="stat-l">연속일</div>
+      <div class="stat-l">연속 학습일 🔥</div>
     </div>
-    <div class="stat">
+    <div class="stat-card">
       <div class="stat-n" id="stat-quiz">—</div>
       <div class="stat-l">퀴즈 정답률</div>
     </div>
   </div>
+
+  <div id="today-notif-zone"></div>
+
+  <div class="card">
+    <div class="card-label">오늘의 표현</div>
+    <div id="home-today-content"><p style="color:var(--sub);font-size:14px;text-align:center;padding:20px 0;">오전 10시에 오늘의 표현이 업데이트됩니다.</p></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">학습 기록</div>
+    <div id="hist-list"></div>
+  </div>
 </div>
 
-<div class="countdown-bar">
-  <div>
-    <div style="font-size:12px;opacity:0.7;margin-bottom:4px;">DELF B1 시험까지</div>
-    <div style="display:flex;align-items:baseline;gap:6px;">
-      <span class="cd-num" id="days-left">—</span>
-      <span style="font-size:14px;opacity:0.75;">일</span>
+<!-- ═══ TODAY ═══ -->
+<div class="page" id="tab-today">
+  <div class="section-title" id="today-section-title">오늘의 표현</div>
+  <div class="card">
+    <div id="today-full-content"></div>
+  </div>
+  <div class="card">
+    <div class="card-label">퀴즈 — 뜻을 보고 프랑스어로 써보세요</div>
+    <div id="quiz-zone"></div>
+  </div>
+</div>
+
+<!-- ═══ ROADMAP ═══ -->
+<div class="page" id="tab-roadmap">
+  <div class="roadmap-header">
+    <div class="roadmap-title">학습 로드맵</div>
+    <div class="roadmap-sub">DELF B1 합격까지의 여정 — <span id="total-days-span">151</span>일</div>
+  </div>
+  <div class="phase-timeline" id="phase-timeline"></div>
+</div>
+
+<!-- ═══ REVIEW ═══ -->
+<div class="page" id="tab-review">
+  <div class="section-title">복습 기록</div>
+  <div class="card">
+    <div class="review-section-title">📆 주간 복습</div>
+    <div id="weekly-content"></div>
+  </div>
+  <div class="card">
+    <div class="review-section-title">📅 월간 복습 & 테스트</div>
+    <div id="monthly-content"></div>
+  </div>
+  <div class="card">
+    <div class="review-section-title">📚 전체 표현 목록</div>
+    <div id="all-expressions"></div>
+  </div>
+</div>
+
+<!-- ═══ GUIDE ═══ -->
+<div class="page" id="tab-guide">
+  <div class="section-title">DELF B1 시험 가이드</div>
+
+  <div class="card">
+    <div class="guide-section-title">시험 구성 & 배점</div>
+    <div class="skill-grid">
+      <div class="skill-card">
+        <div class="skill-name">📖 읽기 (Compréhension des écrits)</div>
+        <div class="skill-score">25점 · 60분</div>
+        <div class="skill-desc">3개 지문 독해. 광고·공지·기사 등 일상 텍스트. 어휘력과 문맥 파악이 핵심.</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">👂 듣기 (Compréhension de l'oral)</div>
+        <div class="skill-score">25점 · 25분</div>
+        <div class="skill-desc">3개 녹음 청취. 일상 대화·방송·인터뷰. 핵심 정보 파악 훈련 필요.</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">✍️ 작문 (Production écrite)</div>
+        <div class="skill-score">25점 · 45분</div>
+        <div class="skill-desc">편지·이메일 형식으로 160~180자. 의견 제시·찬반 논증 구조 필수.</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">🗣️ 구술 (Production orale)</div>
+        <div class="skill-score">25점 · 15분</div>
+        <div class="skill-desc">모놀로그 + 대화형 역할극. 자연스러운 의견 표현이 관건.</div>
+      </div>
     </div>
+    <p style="font-size:13px;color:var(--sub);">각 영역 5점 이상 + 총점 50점 이상이면 합격</p>
   </div>
-  <div class="cd-right">
-    <div class="cd-pct" id="cd-pct"></div>
-    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
-    <div class="cd-sub" id="cd-sub"></div>
+
+  <div class="card">
+    <div class="guide-section-title">B1 필수 표현 유형</div>
+    <ul class="tip-list">
+      <li><strong>의견 제시:</strong> Il me semble que · À mon avis · Je pense que · Il vaut mieux...</li>
+      <li><strong>논리 연결:</strong> Cependant · Néanmoins · En revanche · Par conséquent · Ainsi...</li>
+      <li><strong>찬반 구조:</strong> D'un côté... de l'autre côté · Certes... mais · Bien que + subjonctif...</li>
+      <li><strong>감정 표현:</strong> Je suis ravi(e) de · Il m'est difficile de · Je tiens à + infinitif...</li>
+      <li><strong>가정법:</strong> Si + imparfait + conditionnel (Si j'étais riche, je ferais...)</li>
+      <li><strong>관계절:</strong> dont · auquel · ce qui / ce que · lequel 등 복합 관계대명사</li>
+    </ul>
   </div>
-</div>
 
-<div class="card" id="today-card">
-  <div class="card-title">오늘의 표현</div>
-  <div id="today-content"><p class="empty">오전 10시에 오늘의 표현이 업데이트됩니다.</p></div>
-</div>
+  <div class="card">
+    <div class="guide-section-title">단계별 학습 전략</div>
+    <table class="study-table">
+      <thead>
+        <tr><th>시기</th><th>집중 영역</th><th>일일 학습량</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>6 ~ 7월</td><td>표현 암기 + 독해 기초</td><td>표현 1개 + 읽기 1지문</td></tr>
+        <tr><td>8 ~ 9월</td><td>작문 구조 + 듣기 집중</td><td>표현 1개 + 작문 연습</td></tr>
+        <tr><td>10월</td><td>모의시험 + 약점 보완</td><td>전체 복습 + 기출 풀기</td></tr>
+        <tr><td>11월 1~13일</td><td>핵심 표현 최종 점검</td><td>복습 위주 + 컨디션 관리</td></tr>
+      </tbody>
+    </table>
+  </div>
 
-<div class="card">
-  <div class="card-title">퀴즈 — 의미를 보고 표현을 써보세요</div>
-  <div id="quiz-zone"><p class="empty">표현이 1개 이상 쌓이면 퀴즈를 시작할 수 있어요.</p></div>
-</div>
+  <div class="card">
+    <div class="guide-section-title">구술 시험 핵심 팁</div>
+    <ul class="tip-list">
+      <li>모놀로그(2분)는 반드시 <strong>서론 → 본론(찬반) → 결론</strong> 구조로 발화</li>
+      <li>오늘 배운 표현을 당일 구술 연습에 1회 사용하는 습관 들이기</li>
+      <li>"Euh..."보다 "Alors..." "Donc..." "En fait..." 같은 담화 표지어 활용</li>
+      <li>시험관 질문엔 짧게 답하지 말고 이유 + 예시를 추가해 답변 확장</li>
+      <li>매주 금요일 주간 복습 때 해당 주 표현을 소리 내어 예문으로 말해보기</li>
+    </ul>
+  </div>
 
-<div class="card" id="weekly-card" style="display:none;">
-  <div class="card-title">주간 복습</div>
-  <div id="weekly-content"></div>
-</div>
-
-<div class="card" id="monthly-card" style="display:none;">
-  <div class="card-title">월간 복습</div>
-  <div id="monthly-content"></div>
-</div>
-
-<div class="card">
-  <div class="card-title">학습 기록</div>
-  <div id="hist-list"></div>
+  <div class="card">
+    <div class="guide-section-title">유용한 학습 자료</div>
+    <ul class="tip-list">
+      <li><strong>공식 기출:</strong> ciep.fr에서 DELF B1 샘플 파일 무료 다운로드 가능</li>
+      <li><strong>듣기 연습:</strong> RFI Savoirs · TV5monde · France Inter 팟캐스트</li>
+      <li><strong>작문 교정:</strong> Bonpatron.com으로 문법 자동 교정</li>
+      <li><strong>어휘 확장:</strong> WordReference + Reverso Context 병행 사용 추천</li>
+    </ul>
+  </div>
 </div>
 
 <script>
+// ══════════════════════════════════════════
 // ── DATA (updated by scheduled tasks — do not edit manually) ──
 const data = [
   { date: "2026-06-16", expression: "il vaut mieux", type: "locution verbale", meaning: "~하는 것이 더 낫다", example: "Il vaut mieux partir tôt pour éviter les embouteillages.", translation: "교통체증을 피하려면 일찍 출발하는 것이 더 낫다.", note: "뒤에 부정사(infinitif)를 붙여 씁니다. 조언이나 권고를 할 때 자주 사용해요.", b1point: "DELF B1 구술 시험에서 의견 제시할 때 필수 표현입니다.", tags: ["표현", "조언", "B1"] }
@@ -129,149 +524,218 @@ const data = [
 const weeklyReviews = [];
 const monthlyTests = [];
 // ── END DATA ──
+// ══════════════════════════════════════════
 
-const EXAM_DATE = new Date('2026-09-30');
-const START_DATE = new Date('2026-06-16');
+const EXAM_DATE    = new Date('2026-11-14');
+const REG_DEADLINE = new Date('2026-09-30');
+const START_DATE   = new Date('2026-06-16');
+
 let quizScore = parseInt(localStorage.getItem('qScore') || '0');
 let quizTotal = parseInt(localStorage.getItem('qTotal') || '0');
 let currentQuizIdx = -1;
 let quizAnswered = false;
 
-function formatDate(str) {
-  return str.slice(5).replace('-', '/');
+function showTab(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.getElementById('nav-' + name).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function fmt(str) { return str.slice(5).replace('-', '/'); }
+function daysBetween(a, b) { return Math.ceil((b - a) / 86400000); }
+
+function renderExpression(e, compact) {
+  return `
+    <div class="expr-fr">${e.expression}</div>
+    <span class="type-badge">${e.type}</span>
+    <div class="meaning-ko">${e.meaning}</div>
+    <div class="ex-block">
+      <div class="ex-fr-text">${e.example}</div>
+      <div class="ex-ko-text">→ ${e.translation}</div>
+    </div>
+    ${!compact && e.note ? `<div class="tip-block"><div class="tip-label">기억 팁</div><div class="tip-text">${e.note}</div></div>` : ''}
+    ${!compact && e.b1point ? `<div class="b1-block"><div class="b1-label">B1 시험 포인트</div><div class="b1-text">${e.b1point}</div></div>` : ''}
+    ${e.tags ? `<div class="badge-row">${e.tags.map(t => `<span class="badge-fr">#${t}</span>`).join('')}</div>` : ''}
+  `;
 }
 
 function init() {
   const today = new Date();
-  const todayStr = today.toISOString().slice(0, 10);
-  document.getElementById('today-label').textContent = today.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+  const todayStr = today.toISOString().slice(0,10);
 
-  const daysLeft = Math.max(0, Math.ceil((EXAM_DATE - today) / 86400000));
-  const totalSpan = Math.ceil((EXAM_DATE - START_DATE) / 86400000);
-  const elapsed = Math.ceil((today - START_DATE) / 86400000);
-  const pct = Math.min(100, Math.max(0, Math.round(elapsed / totalSpan * 100)));
-  document.getElementById('days-left').textContent = daysLeft;
-  document.getElementById('cd-pct').textContent = `준비 ${pct}% 완료`;
-  document.getElementById('prog-fill').style.width = pct + '%';
-  document.getElementById('cd-sub').textContent = `${data.length}개 표현 학습 완료`;
+  const dLeft = Math.max(0, daysBetween(today, EXAM_DATE));
+  const total  = daysBetween(START_DATE, EXAM_DATE);
+  const elapsed = Math.max(0, daysBetween(START_DATE, today));
+  const pct = Math.min(100, Math.round(elapsed / total * 100));
+
+  document.getElementById('days-left').textContent = dLeft;
+  document.getElementById('hero-fill').style.width = pct + '%';
+  document.getElementById('pct-label').textContent = pct + '% 완료';
+  document.getElementById('total-days-span').textContent = total;
+
+  const daysToReg = daysBetween(today, REG_DEADLINE);
+  document.getElementById('next-milestone').textContent =
+    daysToReg > 0 ? `접수 마감 D-${daysToReg}` : '접수 완료 ✓';
 
   document.getElementById('stat-total').textContent = data.length;
+  const sorted = [...data].sort((a,b) => b.date.localeCompare(a.date));
 
-  const sorted = [...data].sort((a, b) => b.date.localeCompare(a.date));
-  let streak = 0;
-  let check = new Date(today);
-  check.setHours(0, 0, 0, 0);
-  for (let i = 0; i < sorted.length; i++) {
-    const d = new Date(sorted[i].date + 'T00:00:00');
-    if (d.getTime() === check.getTime()) {
-      streak++;
-      check.setDate(check.getDate() - 1);
-    } else { break; }
+  let streak = 0, check = new Date(today); check.setHours(0,0,0,0);
+  for (const d of sorted) {
+    const dd = new Date(d.date + 'T00:00:00');
+    if (dd.getTime() === check.getTime()) { streak++; check.setDate(check.getDate()-1); }
+    else break;
   }
   document.getElementById('stat-streak').textContent = streak;
-
-  if (quizTotal > 0) {
-    document.getElementById('stat-quiz').textContent = Math.round(quizScore / quizTotal * 100) + '%';
-  }
+  if (quizTotal > 0) document.getElementById('stat-quiz').textContent = Math.round(quizScore/quizTotal*100)+'%';
 
   const todayEntry = data.find(d => d.date === todayStr);
-  const todayEl = document.getElementById('today-content');
+
   if (todayEntry) {
-    todayEl.innerHTML = renderExpression(todayEntry);
+    document.getElementById('today-notif-zone').innerHTML = `
+      <div class="notif-banner" onclick="showTab('today')">
+        <div style="font-size:28px">🇫🇷</div>
+        <div class="notif-text">
+          <div class="notif-headline">오늘의 표현이 업데이트됐어요</div>
+          <div class="notif-expr">${todayEntry.expression}</div>
+          <div class="notif-meaning">${todayEntry.meaning}</div>
+        </div>
+        <div class="notif-arrow">→</div>
+      </div>`;
+    document.getElementById('home-today-content').innerHTML = renderExpression(todayEntry, false);
+  }
+
+  const todaySectionTitle = document.getElementById('today-section-title');
+  todaySectionTitle.textContent = today.toLocaleDateString('ko-KR', {month:'long',day:'numeric',weekday:'short'}) + ' 표현';
+  const todayFullEl = document.getElementById('today-full-content');
+  if (todayEntry) {
+    todayFullEl.innerHTML = renderExpression(todayEntry, false);
+  } else {
+    const yesterday = sorted[0];
+    todayFullEl.innerHTML = `<div class="empty-state"><div class="empty-icon">⏰</div><div class="empty-text">오전 10시에 오늘의 표현이 업데이트됩니다.<br>어제의 표현을 먼저 복습해보세요!</div></div>`
+      + (yesterday ? `<div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)"><div class="card-label">어제의 표현</div>${renderExpression(yesterday,false)}</div>` : '');
   }
 
   if (data.length > 0) renderQuiz();
+  else document.getElementById('quiz-zone').innerHTML = `<div class="empty-state"><div class="empty-icon">🧩</div><div class="empty-text">표현이 쌓이면 퀴즈를 시작할 수 있어요!</div></div>`;
 
   const histEl = document.getElementById('hist-list');
-  if (sorted.length === 0) {
-    histEl.innerHTML = '<p class="empty">아직 학습 기록이 없어요.</p>';
-  } else {
-    histEl.innerHTML = sorted.map(d =>
-      `<div class="hist-item">
-        <span class="hist-date">${formatDate(d.date)}</span>
-        <span class="hist-expr">${d.expression}</span>
-        <span class="hist-meaning">${d.meaning}</span>
-      </div>`
-    ).join('');
-  }
+  histEl.innerHTML = sorted.length === 0
+    ? `<div class="empty-state"><div class="empty-icon">📚</div><div class="empty-text">아직 학습 기록이 없어요.</div></div>`
+    : sorted.map(d => `<div class="hist-item"><span class="hist-date">${fmt(d.date)}</span><span class="hist-expr">${d.expression}</span><span class="hist-meaning">${d.meaning}</span></div>`).join('');
 
-  if (weeklyReviews.length > 0) {
-    document.getElementById('weekly-card').style.display = 'block';
-    document.getElementById('weekly-content').innerHTML = weeklyReviews.map(w =>
-      `<div class="weekly-item"><div class="weekly-title">${w.week}</div><div class="weekly-content">${w.summary}</div></div>`
-    ).join('');
-  }
+  document.getElementById('all-expressions').innerHTML = sorted.length === 0
+    ? `<div class="empty-state"><div class="empty-icon">📖</div><div class="empty-text">아직 표현이 없어요.</div></div>`
+    : sorted.map(d => `<div class="hist-item"><span class="hist-date">${fmt(d.date)}</span><span class="hist-expr">${d.expression}</span><span class="hist-meaning">${d.meaning}</span></div>`).join('');
 
-  if (monthlyTests.length > 0) {
-    document.getElementById('monthly-card').style.display = 'block';
-    document.getElementById('monthly-content').innerHTML = monthlyTests.map(m =>
-      `<div class="weekly-item"><div class="weekly-title">${m.month} 월간 복습</div><div class="weekly-content">${m.summary}</div></div>`
-    ).join('');
-  }
+  const weeklyEl = document.getElementById('weekly-content');
+  weeklyEl.innerHTML = weeklyReviews.length === 0
+    ? `<div class="empty-state"><div class="empty-icon">🗓️</div><div class="empty-text">금요일마다 주간 복습이 추가됩니다.</div></div>`
+    : weeklyReviews.map(w => `<div class="review-item"><div class="review-item-title">${w.week} 주간 복습</div><div class="review-item-sub">${w.summary}</div>${w.expressions?`<div class="tags">${w.expressions.map(e=>`<span class="tag">${e}</span>`).join('')}</div>`:''}</div>`).join('');
+
+  const monthlyEl = document.getElementById('monthly-content');
+  monthlyEl.innerHTML = monthlyTests.length === 0
+    ? `<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">매월 마지막 평일에 월간 테스트가 추가됩니다.</div></div>`
+    : monthlyTests.map(m => `<div class="review-item"><div class="review-item-title">${m.month} 월간 복습 — ${m.expressionCount}개 표현</div><div class="review-item-sub">${m.categories?m.categories.join(' · '):''}</div></div>`).join('');
+
+  renderRoadmap(today);
 }
 
-function renderExpression(e) {
-  return `
-    <div class="expr-big">${e.expression}</div>
-    <span class="badge">${e.type}</span>
-    <div class="meaning-big">${e.meaning}</div>
-    <div class="ex-block">
-      <div class="ex-fr">${e.example}</div>
-      <div class="ex-ko">→ ${e.translation}</div>
-    </div>
-    ${e.note ? `<div class="tip-block"><div class="tip-label">기억 팁</div>${e.note}</div>` : ''}
-    ${e.b1point ? `<div class="b1-block"><div class="b1-label">B1 시험 포인트</div>${e.b1point}</div>` : ''}
-  `;
+function renderRoadmap(today) {
+  const phases = [
+    { name: '1단계 — 기초 표현 쌓기', start: new Date('2026-06-16'), end: new Date('2026-07-31'),
+      desc: '매일 1개 B1 표현 습득. 동사구·관용어·기초 접속사 중심으로 어휘 기반 구축.',
+      goals: ['표현 46개 목표', '매일 10분 학습', '주간 복습 4회'], color: '#3B5BDB' },
+    { name: '2단계 — 심화 & 작문 훈련', start: new Date('2026-08-01'), end: new Date('2026-09-15'),
+      desc: '복잡한 표현·논리 구조·가정법 집중. 매일 배운 표현을 활용한 3문장 작문 연습.',
+      goals: ['표현 46개 추가', '작문 구조 훈련', '듣기 샘플 병행'], color: '#7C3AED' },
+    { name: '⚠️ 접수 마감 — 9월 30일', start: new Date('2026-09-16'), end: new Date('2026-09-30'),
+      desc: '시험 접수 마감일(9/30)을 절대 놓치지 마세요! 전체 표현 1차 복습 및 약점 보완.',
+      goals: ['9/30 접수 마감', '전체 복습 1회전', '월간 테스트 응시'], color: '#C9930A', isWarn: true },
+    { name: '3단계 — 모의시험 집중', start: new Date('2026-10-01'), end: new Date('2026-10-31'),
+      desc: '공식 기출문제로 실전 감각 훈련. 시간 재고 풀기 + 오답 분석 + 구술 연습 시작.',
+      goals: ['기출 모의고사 4회', '전 영역 균형 학습', '구술 연습 시작'], color: '#0F9B5E' },
+    { name: '4단계 — 최종 점검', start: new Date('2026-11-01'), end: new Date('2026-11-13'),
+      desc: '핵심 표현 최종 재점검, 컨디션 관리. 새로운 내용보다 이미 배운 것의 완벽한 습득에 집중.',
+      goals: ['핵심 50개 표현 완벽 암기', '구술 실전 연습', '충분한 수면·컨디션'], color: '#3B5BDB' },
+    { name: '🎯 DELF B1 시험', start: new Date('2026-11-14'), end: new Date('2026-11-15'),
+      desc: '지금까지 열심히 준비한 실력을 발휘할 날! 차분하고 자신감 있게 임하세요. Bonne chance! 🍀',
+      goals: ['서울 시험장', '11월 14~15일', '합격!'], isExam: true, color: '#C9930A' }
+  ];
+
+  const html = phases.map(ph => {
+    const isPast    = today > ph.end && !ph.isExam;
+    const isCurrent = today >= ph.start && today <= ph.end;
+    let dotClass = isPast ? 'done' : isCurrent ? 'current' : 'upcoming';
+    if (ph.isExam) dotClass = 'exam-dot';
+    let cardClass = ph.isExam ? 'phase-card exam-phase' : isCurrent ? 'phase-card current-phase' : 'phase-card';
+
+    let progressHTML = '';
+    if (isCurrent) {
+      const phTotal = daysBetween(ph.start, ph.end);
+      const phElapsed = Math.max(0, daysBetween(ph.start, today));
+      const phPct = Math.min(100, Math.round(phElapsed / phTotal * 100));
+      const dRemain = Math.max(0, daysBetween(today, ph.end));
+      progressHTML = `<div class="phase-progress-bar"><div class="phase-progress-fill" style="width:${phPct}%;background:${ph.color}"></div></div><div class="phase-progress-label">${phPct}% 진행 중 · ${dRemain}일 남음</div>`;
+    }
+
+    const goalTags = ph.goals.map(g => {
+      let cls = 'phase-goal';
+      if (isPast) cls += ' done-tag';
+      else if (isCurrent) cls += ' current-tag';
+      else if (ph.isWarn) cls += ' warn-tag';
+      return `<span class="${cls}">${g}</span>`;
+    }).join('');
+
+    const dateRange = ph.isExam
+      ? '2026.11.14 (토) ~ 15 (일)'
+      : `${ph.start.toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'})} ~ ${ph.end.toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'})}`;
+
+    return `<div class="phase-item"><div class="phase-dot ${dotClass}"></div><div class="${cardClass}"><div class="phase-top"><div class="phase-name">${isPast?'✓ ':''}${ph.name}</div><div class="phase-dates">${dateRange}</div></div><div class="phase-desc">${ph.desc}</div><div class="phase-goals">${goalTags}</div>${progressHTML}</div></div>`;
+  }).join('');
+
+  document.getElementById('phase-timeline').innerHTML = html;
 }
 
 function renderQuiz() {
-  const newIdx = Math.floor(Math.random() * data.length);
-  currentQuizIdx = newIdx;
-  quizAnswered = false;
-  const item = data[newIdx];
+  const idx = Math.floor(Math.random() * data.length);
+  currentQuizIdx = idx; quizAnswered = false;
+  const item = data[idx];
   document.getElementById('quiz-zone').innerHTML = `
-    <div class="quiz-q">다음 뜻에 해당하는 프랑스어 표현을 입력하세요:</div>
-    <div class="quiz-meaning">${item.meaning}</div>
-    <input id="q-input" class="quiz-input" type="text" placeholder="프랑스어로 입력..." autocomplete="off" autocorrect="off" spellcheck="false">
-    <div style="margin-top:10px;">
-      <button class="quiz-btn" id="q-btn" onclick="checkAnswer()">확인</button>
-    </div>
+    <div class="quiz-prompt">다음 뜻에 해당하는 프랑스어 표현을 입력하세요:</div>
+    <div class="quiz-meaning-box">${item.meaning}</div>
+    <input id="q-input" class="quiz-input" type="text" placeholder="프랑스어로 입력..." autocomplete="off" spellcheck="false">
+    <div class="quiz-actions"><button class="btn btn-primary" id="q-btn" onclick="checkAnswer()">확인</button></div>
     <div id="q-result"></div>
-    <div class="score-row">
-      <span class="score-txt">이번 세션 정답률: <span id="q-pct">${quizTotal > 0 ? Math.round(quizScore/quizTotal*100)+'%' : '—'}</span> (${quizScore}/${quizTotal})</span>
-    </div>
-  `;
-  document.getElementById('q-input').addEventListener('keydown', e => {
-    if (e.key === 'Enter') checkAnswer();
-  });
-  document.getElementById('q-input').focus();
+    <div class="score-info">이번 세션: <span id="q-score">${quizTotal>0?Math.round(quizScore/quizTotal*100)+'%':'—'}</span> (${quizScore}/${quizTotal})</div>`;
+  const inp = document.getElementById('q-input');
+  inp.addEventListener('keydown', e => { if (e.key==='Enter') checkAnswer(); });
+  inp.focus();
 }
 
 function checkAnswer() {
   if (quizAnswered) return;
   const val = (document.getElementById('q-input').value || '').trim().toLowerCase();
   const item = data[currentQuizIdx];
-  const answer = item.expression.toLowerCase();
-  quizAnswered = true;
-  quizTotal++;
-  const isCorrect = val === answer;
-  if (isCorrect) quizScore++;
+  quizAnswered = true; quizTotal++;
+  const ok = val === item.expression.toLowerCase();
+  if (ok) quizScore++;
   localStorage.setItem('qScore', quizScore);
   localStorage.setItem('qTotal', quizTotal);
-  const pct = Math.round(quizScore / quizTotal * 100);
+  const pct = Math.round(quizScore/quizTotal*100);
   document.getElementById('stat-quiz').textContent = pct + '%';
-  document.getElementById('q-pct').textContent = pct + '%';
+  document.getElementById('q-score').textContent = pct + '%';
   document.getElementById('q-btn').disabled = true;
   document.getElementById('q-input').disabled = true;
-  const resultEl = document.getElementById('q-result');
-  if (isCorrect) {
-    resultEl.innerHTML = `<div class="result-box correct">정답입니다! "${item.expression}" — ${item.meaning}</div>`;
-  } else {
-    resultEl.innerHTML = `<div class="result-box wrong">정답: <strong>${item.expression}</strong><br><span style="font-size:13px;margin-top:4px;display:block;">예문: ${item.example}</span></div>`;
-  }
+  const res = document.getElementById('q-result');
+  res.innerHTML = ok
+    ? `<div class="quiz-result quiz-correct">✓ 정답! <strong>${item.expression}</strong> — ${item.meaning}</div>`
+    : `<div class="quiz-result quiz-wrong">✗ 정답: <strong>${item.expression}</strong><br><span style="font-size:12px;margin-top:4px;display:block;opacity:0.8">${item.example}</span></div>`;
   setTimeout(() => {
-    resultEl.innerHTML += `<div style="margin-top:10px;"><button class="quiz-btn next" onclick="renderQuiz()">다음 문제</button></div>`;
-  }, 800);
+    res.innerHTML += `<div class="quiz-actions" style="margin-top:10px;"><button class="btn btn-secondary" onclick="renderQuiz()">다음 문제 →</button></div>`;
+  }, 900);
 }
 
 init();
