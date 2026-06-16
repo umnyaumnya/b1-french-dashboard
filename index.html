@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DELF B1 프랑스어 학습 대시보드</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f4f4f6; color: #1a1a1a; padding: 24px; max-width: 760px; margin: 0 auto; }
+h1 { font-size: 18px; font-weight: 600; }
+.sub { font-size: 13px; color: #888; margin-top: 3px; }
+.top-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+.stats { display: flex; gap: 10px; }
+.stat { background: white; border: 1px solid #e8e8e8; border-radius: 10px; padding: 10px 14px; text-align: center; min-width: 72px; }
+.stat-n { font-size: 20px; font-weight: 600; color: #1a1a1a; }
+.stat-l { font-size: 11px; color: #999; margin-top: 2px; }
+.card { background: white; border: 1px solid #e8e8e8; border-radius: 14px; padding: 20px 22px; margin-bottom: 14px; }
+.card-title { font-size: 11px; font-weight: 600; color: #aaa; letter-spacing: 0.6px; text-transform: uppercase; margin-bottom: 14px; }
+.countdown-bar { background: #002395; border-radius: 14px; padding: 18px 22px; margin-bottom: 14px; color: white; display: flex; justify-content: space-between; align-items: center; }
+.cd-num { font-size: 36px; font-weight: 600; line-height: 1; }
+.cd-unit { font-size: 13px; opacity: 0.7; margin-top: 3px; }
+.cd-right { text-align: right; }
+.cd-pct { font-size: 13px; opacity: 0.8; margin-bottom: 6px; }
+.prog-track { height: 5px; background: rgba(255,255,255,0.25); border-radius: 3px; width: 130px; }
+.prog-fill { height: 5px; background: white; border-radius: 3px; transition: width 0.4s; }
+.cd-sub { font-size: 11px; opacity: 0.55; margin-top: 5px; }
+.expr-big { font-size: 26px; font-weight: 600; color: #002395; font-style: italic; margin-bottom: 6px; }
+.badge { display: inline-block; font-size: 11px; padding: 2px 8px; background: #eef0ff; color: #3730a3; border-radius: 5px; margin-bottom: 12px; }
+.meaning-big { font-size: 16px; color: #333; margin-bottom: 14px; }
+.ex-block { background: #f7f8ff; border-left: 3px solid #002395; padding: 10px 14px; border-radius: 0 8px 8px 0; margin-bottom: 8px; }
+.ex-fr { font-size: 14px; color: #002395; margin-bottom: 3px; }
+.ex-ko { font-size: 13px; color: #666; }
+.tip-block { background: #fffbeb; border-left: 3px solid #d97706; padding: 10px 14px; border-radius: 0 8px 8px 0; font-size: 13px; color: #92400e; margin-top: 12px; }
+.tip-label { font-size: 11px; font-weight: 600; color: #b45309; margin-bottom: 3px; }
+.b1-block { background: #f0fdf4; border-left: 3px solid #16a34a; padding: 10px 14px; border-radius: 0 8px 8px 0; font-size: 13px; color: #166534; margin-top: 8px; }
+.b1-label { font-size: 11px; font-weight: 600; color: #15803d; margin-bottom: 3px; }
+.quiz-q { font-size: 14px; color: #555; margin-bottom: 8px; }
+.quiz-meaning { font-size: 18px; font-weight: 600; color: #1a1a1a; margin-bottom: 16px; padding: 12px 16px; background: #f7f8ff; border-radius: 8px; }
+.quiz-input { width: 100%; font-size: 15px; padding: 10px 14px; border: 1.5px solid #ddd; border-radius: 8px; outline: none; color: #1a1a1a; background: white; font-family: inherit; }
+.quiz-input:focus { border-color: #002395; }
+.quiz-btn { margin-top: 10px; padding: 9px 22px; background: #002395; color: white; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; font-family: inherit; }
+.quiz-btn:hover { background: #001a70; }
+.quiz-btn.next { background: #555; margin-left: 8px; }
+.quiz-btn.next:hover { background: #333; }
+.result-box { margin-top: 12px; font-size: 14px; padding: 10px 14px; border-radius: 8px; }
+.correct { background: #ecfdf5; color: #065f46; border: 1px solid #bbf7d0; }
+.wrong { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+.score-row { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; }
+.score-txt { font-size: 12px; color: #aaa; }
+.hist-item { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid #f0f0f0; }
+.hist-item:last-child { border-bottom: none; }
+.hist-date { font-size: 12px; color: #bbb; min-width: 44px; }
+.hist-expr { font-size: 14px; font-style: italic; color: #002395; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hist-meaning { font-size: 13px; color: #777; white-space: nowrap; }
+.empty { font-size: 13px; color: #bbb; padding: 16px 0; text-align: center; }
+.weekly-item { padding: 10px 14px; background: #f7f8ff; border-radius: 8px; margin-bottom: 8px; }
+.weekly-title { font-size: 13px; font-weight: 600; color: #002395; margin-bottom: 4px; }
+.weekly-content { font-size: 13px; color: #555; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<div class="top-row">
+  <div>
+    <h1>DELF B1 학습 대시보드</h1>
+    <p class="sub" id="today-label"></p>
+  </div>
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-n" id="stat-total">0</div>
+      <div class="stat-l">학습일</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n" id="stat-streak">0</div>
+      <div class="stat-l">연속일</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n" id="stat-quiz">—</div>
+      <div class="stat-l">퀴즈 정답률</div>
+    </div>
+  </div>
+</div>
+
+<div class="countdown-bar">
+  <div>
+    <div style="font-size:12px;opacity:0.7;margin-bottom:4px;">DELF B1 시험까지</div>
+    <div style="display:flex;align-items:baseline;gap:6px;">
+      <span class="cd-num" id="days-left">—</span>
+      <span style="font-size:14px;opacity:0.75;">일</span>
+    </div>
+  </div>
+  <div class="cd-right">
+    <div class="cd-pct" id="cd-pct"></div>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    <div class="cd-sub" id="cd-sub"></div>
+  </div>
+</div>
+
+<div class="card" id="today-card">
+  <div class="card-title">오늘의 표현</div>
+  <div id="today-content"><p class="empty">오전 10시에 오늘의 표현이 업데이트됩니다.</p></div>
+</div>
+
+<div class="card">
+  <div class="card-title">퀴즈 — 의미를 보고 표현을 써보세요</div>
+  <div id="quiz-zone"><p class="empty">표현이 1개 이상 쌓이면 퀴즈를 시작할 수 있어요.</p></div>
+</div>
+
+<div class="card" id="weekly-card" style="display:none;">
+  <div class="card-title">주간 복습</div>
+  <div id="weekly-content"></div>
+</div>
+
+<div class="card" id="monthly-card" style="display:none;">
+  <div class="card-title">월간 복습</div>
+  <div id="monthly-content"></div>
+</div>
+
+<div class="card">
+  <div class="card-title">학습 기록</div>
+  <div id="hist-list"></div>
+</div>
+
+<script>
+// ── DATA (updated by scheduled tasks — do not edit manually) ──
+const data = [
+  { date: "2026-06-16", expression: "il vaut mieux", type: "locution verbale", meaning: "~하는 것이 더 낫다", example: "Il vaut mieux partir tôt pour éviter les embouteillages.", translation: "교통체증을 피하려면 일찍 출발하는 것이 더 낫다.", note: "뒤에 부정사(infinitif)를 붙여 씁니다. 조언이나 권고를 할 때 자주 사용해요.", b1point: "DELF B1 구술 시험에서 의견 제시할 때 필수 표현입니다.", tags: ["표현", "조언", "B1"] }
+];
+const weeklyReviews = [];
+const monthlyTests = [];
+// ── END DATA ──
+
+const EXAM_DATE = new Date('2026-09-30');
+const START_DATE = new Date('2026-06-16');
+let quizScore = parseInt(localStorage.getItem('qScore') || '0');
+let quizTotal = parseInt(localStorage.getItem('qTotal') || '0');
+let currentQuizIdx = -1;
+let quizAnswered = false;
+
+function formatDate(str) {
+  return str.slice(5).replace('-', '/');
+}
+
+function init() {
+  const today = new Date();
+  const todayStr = today.toISOString().slice(0, 10);
+  document.getElementById('today-label').textContent = today.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+
+  const daysLeft = Math.max(0, Math.ceil((EXAM_DATE - today) / 86400000));
+  const totalSpan = Math.ceil((EXAM_DATE - START_DATE) / 86400000);
+  const elapsed = Math.ceil((today - START_DATE) / 86400000);
+  const pct = Math.min(100, Math.max(0, Math.round(elapsed / totalSpan * 100)));
+  document.getElementById('days-left').textContent = daysLeft;
+  document.getElementById('cd-pct').textContent = `준비 ${pct}% 완료`;
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('cd-sub').textContent = `${data.length}개 표현 학습 완료`;
+
+  document.getElementById('stat-total').textContent = data.length;
+
+  const sorted = [...data].sort((a, b) => b.date.localeCompare(a.date));
+  let streak = 0;
+  let check = new Date(today);
+  check.setHours(0, 0, 0, 0);
+  for (let i = 0; i < sorted.length; i++) {
+    const d = new Date(sorted[i].date + 'T00:00:00');
+    if (d.getTime() === check.getTime()) {
+      streak++;
+      check.setDate(check.getDate() - 1);
+    } else { break; }
+  }
+  document.getElementById('stat-streak').textContent = streak;
+
+  if (quizTotal > 0) {
+    document.getElementById('stat-quiz').textContent = Math.round(quizScore / quizTotal * 100) + '%';
+  }
+
+  const todayEntry = data.find(d => d.date === todayStr);
+  const todayEl = document.getElementById('today-content');
+  if (todayEntry) {
+    todayEl.innerHTML = renderExpression(todayEntry);
+  }
+
+  if (data.length > 0) renderQuiz();
+
+  const histEl = document.getElementById('hist-list');
+  if (sorted.length === 0) {
+    histEl.innerHTML = '<p class="empty">아직 학습 기록이 없어요.</p>';
+  } else {
+    histEl.innerHTML = sorted.map(d =>
+      `<div class="hist-item">
+        <span class="hist-date">${formatDate(d.date)}</span>
+        <span class="hist-expr">${d.expression}</span>
+        <span class="hist-meaning">${d.meaning}</span>
+      </div>`
+    ).join('');
+  }
+
+  if (weeklyReviews.length > 0) {
+    document.getElementById('weekly-card').style.display = 'block';
+    document.getElementById('weekly-content').innerHTML = weeklyReviews.map(w =>
+      `<div class="weekly-item"><div class="weekly-title">${w.week}</div><div class="weekly-content">${w.summary}</div></div>`
+    ).join('');
+  }
+
+  if (monthlyTests.length > 0) {
+    document.getElementById('monthly-card').style.display = 'block';
+    document.getElementById('monthly-content').innerHTML = monthlyTests.map(m =>
+      `<div class="weekly-item"><div class="weekly-title">${m.month} 월간 복습</div><div class="weekly-content">${m.summary}</div></div>`
+    ).join('');
+  }
+}
+
+function renderExpression(e) {
+  return `
+    <div class="expr-big">${e.expression}</div>
+    <span class="badge">${e.type}</span>
+    <div class="meaning-big">${e.meaning}</div>
+    <div class="ex-block">
+      <div class="ex-fr">${e.example}</div>
+      <div class="ex-ko">→ ${e.translation}</div>
+    </div>
+    ${e.note ? `<div class="tip-block"><div class="tip-label">기억 팁</div>${e.note}</div>` : ''}
+    ${e.b1point ? `<div class="b1-block"><div class="b1-label">B1 시험 포인트</div>${e.b1point}</div>` : ''}
+  `;
+}
+
+function renderQuiz() {
+  const newIdx = Math.floor(Math.random() * data.length);
+  currentQuizIdx = newIdx;
+  quizAnswered = false;
+  const item = data[newIdx];
+  document.getElementById('quiz-zone').innerHTML = `
+    <div class="quiz-q">다음 뜻에 해당하는 프랑스어 표현을 입력하세요:</div>
+    <div class="quiz-meaning">${item.meaning}</div>
+    <input id="q-input" class="quiz-input" type="text" placeholder="프랑스어로 입력..." autocomplete="off" autocorrect="off" spellcheck="false">
+    <div style="margin-top:10px;">
+      <button class="quiz-btn" id="q-btn" onclick="checkAnswer()">확인</button>
+    </div>
+    <div id="q-result"></div>
+    <div class="score-row">
+      <span class="score-txt">이번 세션 정답률: <span id="q-pct">${quizTotal > 0 ? Math.round(quizScore/quizTotal*100)+'%' : '—'}</span> (${quizScore}/${quizTotal})</span>
+    </div>
+  `;
+  document.getElementById('q-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkAnswer();
+  });
+  document.getElementById('q-input').focus();
+}
+
+function checkAnswer() {
+  if (quizAnswered) return;
+  const val = (document.getElementById('q-input').value || '').trim().toLowerCase();
+  const item = data[currentQuizIdx];
+  const answer = item.expression.toLowerCase();
+  quizAnswered = true;
+  quizTotal++;
+  const isCorrect = val === answer;
+  if (isCorrect) quizScore++;
+  localStorage.setItem('qScore', quizScore);
+  localStorage.setItem('qTotal', quizTotal);
+  const pct = Math.round(quizScore / quizTotal * 100);
+  document.getElementById('stat-quiz').textContent = pct + '%';
+  document.getElementById('q-pct').textContent = pct + '%';
+  document.getElementById('q-btn').disabled = true;
+  document.getElementById('q-input').disabled = true;
+  const resultEl = document.getElementById('q-result');
+  if (isCorrect) {
+    resultEl.innerHTML = `<div class="result-box correct">정답입니다! "${item.expression}" — ${item.meaning}</div>`;
+  } else {
+    resultEl.innerHTML = `<div class="result-box wrong">정답: <strong>${item.expression}</strong><br><span style="font-size:13px;margin-top:4px;display:block;">예문: ${item.example}</span></div>`;
+  }
+  setTimeout(() => {
+    resultEl.innerHTML += `<div style="margin-top:10px;"><button class="quiz-btn next" onclick="renderQuiz()">다음 문제</button></div>`;
+  }, 800);
+}
+
+init();
+</script>
+</body>
+</html>
