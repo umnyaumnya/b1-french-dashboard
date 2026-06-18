@@ -300,6 +300,26 @@ body {
 .rv-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
 .rv-tag { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px; background: var(--lav-bg); color: var(--lavender); border: 1.5px solid #DDD6FE; }
 
+/* ── Date Nav ── */
+.date-nav { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 16px; }
+.date-nav-btn { background: white; border: 2px solid var(--border); border-radius: 50%; width: 38px; height: 38px; font-size: 17px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; color: var(--text); }
+.date-nav-btn:hover:not(:disabled) { background: var(--pink-bg); border-color: var(--pink); color: var(--pink); }
+.date-nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+.date-nav-label { font-size: 14px; font-weight: 800; color: var(--sub); min-width: 90px; text-align: center; }
+
+/* ── All-list expr card ── */
+.all-expr-card { border: 2px solid var(--border); border-radius: 16px; margin-bottom: 12px; overflow: hidden; }
+.all-expr-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; cursor: pointer; background: white; transition: background 0.15s; }
+.all-expr-header:hover { background: var(--pink-bg); }
+.all-expr-header-left { display: flex; align-items: center; gap: 10px; }
+.all-expr-date { font-size: 11px; font-weight: 700; color: var(--sub); }
+.all-expr-name { font-size: 15px; font-weight: 800; color: var(--pink); font-style: italic; }
+.all-expr-ko { font-size: 12px; font-weight: 600; color: var(--sub); }
+.all-expr-arrow { font-size: 13px; color: var(--sub); transition: transform 0.2s; }
+.all-expr-arrow.open { transform: rotate(90deg); }
+.all-expr-body { display: none; padding: 0 16px 16px; background: white; border-top: 2px dashed var(--border); }
+.all-expr-body.open { display: block; }
+
 /* ── Empty ── */
 .empty { text-align: center; padding: 30px 16px; color: var(--sub); }
 .empty-icon { font-size: 40px; margin-bottom: 10px; }
@@ -389,6 +409,11 @@ body {
 <!-- ═══ TODAY ═══ -->
 <div class="page" id="tab-today">
   <div class="section-title" id="today-title">📖 오늘의 표현</div>
+  <div class="date-nav">
+    <button class="date-nav-btn" id="prev-btn" onclick="navigateExpr(1)" title="이전 날">←</button>
+    <span class="date-nav-label" id="date-nav-label">—</span>
+    <button class="date-nav-btn" id="next-btn" onclick="navigateExpr(-1)" title="다음 날">→</button>
+  </div>
   <div class="card"><div id="today-full"></div></div>
   <div class="card">
     <div class="card-label">🧩 퀴즈</div>
@@ -519,12 +544,43 @@ let quizScore = parseInt(localStorage.getItem('qScore')||'0');
 let quizTotal = parseInt(localStorage.getItem('qTotal')||'0');
 let qIdx = -1, qDone = false;
 
+const sorted = [...data].sort((a,b)=>b.date.localeCompare(a.date));
+let viewIdx = 0;
+
 function showTab(t) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-'+t).classList.add('active');
   document.getElementById('nav-'+t).classList.add('active');
   window.scrollTo(0,0);
+}
+
+function updateTodayView() {
+  const entry = sorted[viewIdx];
+  if (!entry) return;
+  document.getElementById('today-full').innerHTML = renderExpr(entry, false);
+  const d = new Date(entry.date + 'T00:00:00');
+  const label = d.toLocaleDateString('ko-KR', {month:'long', day:'numeric', weekday:'short'});
+  document.getElementById('today-title').textContent = '📖 ' + label + ' 표현';
+  const today = new Date().toISOString().slice(0,10);
+  const diffDays = Math.round((new Date(today) - new Date(entry.date)) / 86400000);
+  document.getElementById('date-nav-label').textContent =
+    diffDays === 0 ? '오늘' : diffDays === 1 ? '어제' : diffDays + '일 전';
+  document.getElementById('prev-btn').disabled = viewIdx >= sorted.length - 1;
+  document.getElementById('next-btn').disabled = viewIdx <= 0;
+}
+
+function navigateExpr(dir) {
+  viewIdx = Math.max(0, Math.min(sorted.length - 1, viewIdx + dir));
+  updateTodayView();
+}
+
+function toggleAllExpr(id) {
+  const body = document.getElementById('ae-body-'+id);
+  const arrow = document.getElementById('ae-arrow-'+id);
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  arrow.classList.toggle('open', !isOpen);
 }
 
 const dBetween = (a,b) => Math.ceil((b-a)/86400000);
@@ -560,7 +616,6 @@ function init() {
   const dr = dBetween(today, REG_DEADLINE);
   document.getElementById('next-milestone').textContent = dr>0 ? `📝 접수 마감 D-${dr}` : '접수 완료 ✓';
 
-  const sorted = [...data].sort((a,b)=>b.date.localeCompare(a.date));
   document.getElementById('stat-total').textContent = data.length;
 
   let streak=0, chk=new Date(today); chk.setHours(0,0,0,0);
@@ -584,27 +639,34 @@ function init() {
     document.getElementById('home-today').innerHTML = renderExpr(todayEntry, false);
   }
 
-  document.getElementById('today-title').textContent =
-    '📖 '+today.toLocaleDateString('ko-KR',{month:'long',day:'numeric',weekday:'short'})+' 표현';
-  const todayFullEl = document.getElementById('today-full');
-  if(todayEntry){
-    todayFullEl.innerHTML = renderExpr(todayEntry, false);
-  } else {
-    const yest = sorted[0];
-    todayFullEl.innerHTML = `<div class="empty"><div class="empty-icon">⏰</div><div class="empty-text">오전 10시에 오늘의 표현이 업데이트돼요!</div></div>`
-      +(yest?`<div style="margin-top:16px;padding-top:16px;border-top:2px dashed var(--border)"><div class="card-label">어제의 표현</div>${renderExpr(yest,false)}</div>`:'');
-  }
+  // 오늘의 표현 탭 — 날짜 네비게이션 초기화
+  viewIdx = todayEntry ? sorted.findIndex(d=>d.date===todayStr) : 0;
+  if(viewIdx < 0) viewIdx = 0;
+  updateTodayView();
 
   if(data.length>0) renderQuiz();
   else document.getElementById('quiz-zone').innerHTML=`<div class="empty"><div class="empty-icon">🧩</div><div class="empty-text">표현이 쌓이면 퀴즈 시작!</div></div>`;
 
   document.getElementById('hist-list').innerHTML = sorted.length===0
     ? `<div class="empty"><div class="empty-icon">📚</div><div class="empty-text">아직 기록이 없어요!</div></div>`
-    : sorted.map(d=>`<div class="hist-row"><span class="hist-date">${fmt(d.date)}</span><span class="hist-expr">${d.expression}</span><span class="hist-ko">${d.meaning}</span></div>`).join('');
+    : sorted.map((d,i)=>`<div class="hist-row" style="cursor:pointer" onclick="viewIdx=${i};showTab('today');updateTodayView()"><span class="hist-date">${fmt(d.date)}</span><span class="hist-expr">${d.expression}</span><span class="hist-ko">${d.meaning}</span></div>`).join('');
 
   document.getElementById('all-list').innerHTML = sorted.length===0
     ? `<div class="empty"><div class="empty-icon">📖</div><div class="empty-text">아직 표현이 없어요!</div></div>`
-    : sorted.map(d=>`<div class="hist-row"><span class="hist-date">${fmt(d.date)}</span><span class="hist-expr">${d.expression}</span><span class="hist-ko">${d.meaning}</span></div>`).join('');
+    : sorted.map((d,i)=>`
+      <div class="all-expr-card">
+        <div class="all-expr-header" onclick="toggleAllExpr(${i})">
+          <div class="all-expr-header-left">
+            <span class="all-expr-date">${fmt(d.date)}</span>
+            <span class="all-expr-name">${d.expression}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="all-expr-ko">${d.meaning}</span>
+            <span class="all-expr-arrow" id="ae-arrow-${i}">▶</span>
+          </div>
+        </div>
+        <div class="all-expr-body" id="ae-body-${i}">${renderExpr(d, false)}</div>
+      </div>`).join('');
 
   document.getElementById('weekly-list').innerHTML = weeklyReviews.length===0
     ? `<div class="empty"><div class="empty-icon">🗓️</div><div class="empty-text">금요일마다 주간 복습이 추가돼요!</div></div>`
