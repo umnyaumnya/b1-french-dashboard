@@ -186,6 +186,26 @@ body {
   color: var(--pink); border: 1.5px solid var(--border);
 }
 
+/* ── Speak button ── */
+.speak-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--blu-bg); border: 1.5px solid #BFDBFE;
+  border-radius: 50%; width: 30px; height: 30px;
+  cursor: pointer; color: #3B82F6; font-size: 14px;
+  flex-shrink: 0; transition: all 0.2s; padding: 0;
+  vertical-align: middle;
+}
+.speak-btn:hover { background: #BFDBFE; transform: scale(1.1); }
+.speak-btn.speaking {
+  background: #3B82F6; color: #fff; border-color: #3B82F6;
+  animation: speakPulse 0.5s ease-in-out infinite alternate;
+}
+@keyframes speakPulse { from { transform: scale(1); } to { transform: scale(1.18); } }
+.expr-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.expr-row .expr-big { margin-bottom: 0; }
+.ex-row { display: flex; align-items: flex-start; gap: 8px; }
+.ex-row .ex-fr { flex: 1; }
+
 /* ── Quiz ── */
 .quiz-q { font-size: 13px; font-weight: 700; color: var(--sub); margin-bottom: 10px; }
 .quiz-box {
@@ -526,8 +546,48 @@ body {
 
 <script>
 // ══════════════════════════════════════════
+// ── SPEECH ──
+let _activeBtn = null;
+function speak(text, btn) {
+  if (!window.speechSynthesis) return;
+  // Toggle off if same button clicked again
+  if (_activeBtn === btn && window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+    return;
+  }
+  window.speechSynthesis.cancel();
+  if (_activeBtn) { _activeBtn.classList.remove('speaking'); _activeBtn = null; }
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'fr-FR';
+  u.rate = 0.82;
+  u.pitch = 1.0;
+  // Prefer a French (non-Canadian) voice if available
+  const pick = () => {
+    const vs = window.speechSynthesis.getVoices();
+    return vs.find(v => v.lang === 'fr-FR') || vs.find(v => v.lang.startsWith('fr')) || null;
+  };
+  const v = pick();
+  if (v) u.voice = v;
+  else if (window.speechSynthesis.getVoices().length === 0) {
+    // Voices not loaded yet — wait for voiceschanged
+    window.speechSynthesis.onvoiceschanged = () => {
+      const v2 = pick();
+      if (v2) u.voice = v2;
+      window.speechSynthesis.onvoiceschanged = null;
+    };
+  }
+  if (btn) { btn.classList.add('speaking'); _activeBtn = btn; }
+  u.onend = u.onerror = () => { if (btn) btn.classList.remove('speaking'); _activeBtn = null; };
+  window.speechSynthesis.speak(u);
+}
+function he(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ══════════════════════════════════════════
 // ── DATA (updated by scheduled tasks — do not edit manually) ──
 const data = [
+  { date: "2026-06-29", expression: "bien que", type: "locution conjonctive", meaning: "비록 ~이지만, ~임에도 불구하고", example: "Bien qu'il soit fatigué, il continue à travailler sans se plaindre.", translation: "비록 피곤하지만, 그는 불평 없이 계속 일한다.", note: "반드시 접속법(subjonctif)이 뒤따릅니다. 주어가 같을 때 'malgré + 명사'로 대체 가능합니다.", b1point: "작문에서 단순한 'mais' 대신 사용하면 문법 다양성 점수 향상. 'quoique', 'même si'와 함께 양보 표현 세트로 익혀두세요.", tags: ["접속사", "양보", "접속법", "subjonctif", "B1필수", "작문", "구술"] },
   { date: "2026-06-23", expression: "au fur et à mesure", type: "locution adverbiale / conjonctive", meaning: "점차적으로, 서서히, ~함에 따라", example: "Au fur et à mesure de sa pratique, son accent s'est nettement amélioré.", translation: "연습을 거듭함에 따라 그의 발음이 확연히 좋아졌다.", note: "세 가지 구조: 단독 부사구 / 'de + 명사' 전치사구 / 'que + 절' 접속사구로 유연하게 활용 가능합니다.", b1point: "구술·작문에서 점진적 변화를 표현할 때 'progressivement'나 'peu à peu' 대신 사용하면 어휘 수준을 높일 수 있습니다.", tags: ["부사구", "접속표현", "시간", "점진변화", "B1필수", "작문", "구술"] },
   { date: "2026-06-22", expression: "en revanche", type: "adverbe / connecteur logique", meaning: "반면에, 그에 반하여, 그 대신에", example: "Il est mauvais en mathématiques ; en revanche, il excelle en littérature.", translation: "그는 수학을 못하지만, 반면에 문학에서는 뛰어나다.", note: "앞 문장과 대조되는 내용을 이어줄 때 사용. «par contre»와 유사하지만 격식체에서 «en revanche»가 더 자연스럽습니다.", b1point: "작문에서 단순한 «mais» 대신 사용하면 논리적 전개 능력을 보여줄 수 있어 어휘 다양성 점수에 유리. 비교·대조 논술에서 단락 전환 시 적극 활용하세요.", tags: ["부사", "접속표현", "대조", "B1필수", "작문", "논술"] },
   { date: "2026-06-19", expression: "à condition que", type: "locution conjonctive", meaning: "~한다는 조건 하에, ~하기만 하면", example: "Je viendrai à la fête à condition que tu m'invites officiellement.", translation: "네가 공식적으로 초대해준다면 파티에 갈게.", note: "반드시 접속법(subjonctif)이 뒤따릅니다. 주어가 같을 때는 'à condition de + infinitif'로 씁니다.", b1point: "작문·구술에서 조건을 표현하는 핵심 접속사구. 'si + indicatif'와 달리 접속법을 요구하므로 시험 차별화 포인트.", tags: ["접속사", "조건", "접속법", "B1필수", "작문"] },
@@ -593,11 +653,17 @@ const fmt = s => s.slice(5).replace('-','/');
 
 function renderExpr(e, compact) {
   return `
-    <div class="expr-big">${e.expression}</div>
+    <div class="expr-row">
+      <div class="expr-big">${e.expression}</div>
+      <button class="speak-btn" data-speak="${he(e.expression)}" onclick="speak(this.dataset.speak,this)" title="표현 듣기">🔊</button>
+    </div>
     <span class="type-pill">${e.type}</span>
     <div class="meaning-big">${e.meaning}</div>
     <div class="ex-box">
-      <div class="ex-fr">${e.example}</div>
+      <div class="ex-row">
+        <div class="ex-fr">${e.example}</div>
+        <button class="speak-btn" data-speak="${he(e.example)}" onclick="speak(this.dataset.speak,this)" title="예문 듣기">🔊</button>
+      </div>
       <div class="ex-ko">→ ${e.translation}</div>
     </div>
     ${!compact&&e.note?`<div class="tip-box"><div class="tip-top">💡 기억 팁</div><div class="tip-body">${e.note}</div></div>`:''}
